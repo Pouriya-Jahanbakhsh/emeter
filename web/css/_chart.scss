@@ -1,0 +1,36 @@
+.wobserver-chart {
+  display: inline-block;
+
+  width: 100% !important;
+  height: 20em;
+
+  vertical-align: top;
+  margin-bottom: 2em !important;
+
+  canvas {
+    margin-bottom: 2em;
+  }
+
+  .chart-legend {
+    margin-top: -4.2em;
+    ul {
+      list-style: none;
+      li {
+        display: inline-block;
+        & + li {
+          margin-left: 1em;
+        }
+      }
+      span {
+        position: relative;
+        top: 0.2em;
+        display: inline-block;
+        border-radius: 0.3em;
+        border: solid 1px #000;
+        width: 1em;
+        height: 1em;
+        margin-right: 0.5em;
+      }
+    }
+  }
+}

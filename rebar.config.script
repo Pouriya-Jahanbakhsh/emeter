@@ -1,0 +1,25 @@
+{_, {_, Deps}, CONFIG2} = lists:keytake(deps, 1, CONFIG).
+
+{_, {_, [{_, RelxNameVer, Apps}|RelxOpts]}, CONFIG3} = lists:keytake(relx, 1, CONFIG2).
+{_, {_, ErlOpts}, CONFIG4} = lists:keytake(erl_opts, 1, CONFIG3).
+
+{Deps2, Apps2, ErlOpts2} =
+    case os:getenv("ERL_EMETER_USE_LAGER", undefined) of
+        undefined ->
+            {Deps, Apps, ErlOpts};
+        _ ->
+            {[{lager, "3.6.2"}|Deps], [goldrush, lager|Apps], [{d, emeter_use_lager, true}|ErlOpts]}
+    end.
+
+{Deps3, Apps3, ErlOpts3} =
+    case os:getenv("ERL_EMETER_USE_JIFFY", undefined) of
+        undefined ->
+            {[{jsone, "1.4.5"}|Deps2], [{jsone, load}|Apps2], ErlOpts2};
+        _ ->
+            {[{jiffy, "0.15.2"}|Deps2], [{xmerl, load}, {jiffy, load}|Apps2], [{d, emeter_use_jiffy, true}|ErlOpts2]}
+    end.
+
+[{erl_opts, ErlOpts3}
+,{relx, [{release, RelxNameVer, Apps3}|RelxOpts]}
+,{deps, Deps3}
+|CONFIG4].

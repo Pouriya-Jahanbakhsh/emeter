@@ -1,0 +1,397 @@
+$menu-headerd-color: lighten($menu-background-color, 50%) !default;
+$menu-header-background-color: lighten($menu-background-color, 10%) !default;
+
+#menu {
+  @include user-select(none);
+
+  box-shadow: inset -10px 0 20px -10px rgba(0, 0, 0, 0.6);
+  @media screen and (min-width: $breakpoint-medium) {
+	box-shadow: none;
+  }
+	z-index: 10;
+  position: fixed;
+  height: 110%;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  background-color: $menu-background-color;
+  color: $menu-color;
+
+  transition: width 1s;
+  width: $menu-width-retracted;
+  @media screen and (min-width: $breakpoint-small) {
+		width: $menu-width-extended;
+  }
+  @media screen and (min-width: $breakpoint-medium) {
+		left: 0;
+		right: 0;
+		top: 0;
+		//height: $menu-button-height-horizontal;
+		height: $menu-button-height-horizontal + $menu-header-height;
+		width: auto;
+		overflow: visible;
+		margin: 0;
+		padding: 0;
+
+		transition: top 1s;
+
+		&.hidden {
+			top: -$menu-header-height;
+
+			ol > li {
+				ol {
+					top: $menu-button-height-horizontal;
+				}
+
+				header {
+					top: $menu-button-height-horizontal;
+				}
+			}
+		}
+		//text-align: center;
+  }
+
+  @media screen and (max-width: $breakpoint-small) {
+		&:hover {
+			transition-delay: 1s;
+			width: $menu-width-extended;
+		}
+  }
+
+  white-space: nowrap;
+  & > header {
+		display: block;
+		box-sizing: border-box;
+		transition: top 1s;
+
+		@media screen and (min-width: $breakpoint-medium) {
+			//display: inline-block;
+			margin: 0;
+			padding: 0;
+			//position: fixed;
+			//top: 0;
+			//left: 0;
+			box-shadow: none;
+			/*height: $menu-button-height-horizontal;
+			line-height: $menu-button-height-horizontal;*/
+			height: $menu-header-height;
+			line-height: $menu-header-height;
+			width: 100%;
+		}
+
+		width: $menu-width-extended;
+		text-align: center;
+		height: $menu-header-height;
+		line-height: $menu-header-height;
+		background-color: $menu-header-background-color;
+		color: $menu-headerd-color;
+		font-weight: bold;
+		box-shadow: inset -10px 0 20px -10px rgba(0, 0, 0, 0.6);
+
+		padding: 0 1em 0 3.5em;
+		i {
+			box-sizing: border-box;
+			position: absolute;
+			left: 0.25em;
+			top: 0.25em;
+			width: 2.5em;
+			height: 2.5em;
+			background-size: 100% 100%;
+			display: inline-block;
+
+			border-radius: 0.5em;
+			// border: solid 2px lighten($menu-background-color, 20%);
+
+			@media screen and (min-width: $breakpoint-medium) {
+			//top: 0;
+			//left: 0;
+			}
+		}
+  }
+
+  & > footer {
+		display: none;
+		@media screen and (min-width: $breakpoint-small) {
+			display: block;
+		}
+		@media screen and (min-width: $breakpoint-medium) {
+			display: none;
+		}
+
+		position: absolute;
+		bottom: 0;
+		box-sizing: border-box;
+
+		width: $menu-width-extended;
+		text-align: center;
+		height: $menu-header-height;
+		line-height: $menu-header-height;
+		color: lighten($menu-background-color, 10%);
+  }
+
+  ol {
+	list-style-type: none;
+
+	@media screen and (min-width: $breakpoint-medium) {
+	  /*display: inline-block;
+	  margin-left: $menu-width-extended;*/
+	  display: inline-block;
+	  width: auto;
+	}
+
+	.separator {
+	  border-bottom: solid 1px lighten($menu-background-color, 10%);
+	  margin: 0.3em;
+	  width: ($menu-width-extended - 0.6em);
+	}
+	& > li {
+	  ol {
+
+		background-color: rgba(0, 0, 0, 0.08);
+		border-top: solid 1px lighten($menu-background-color, 10%);
+		border-bottom: solid 1px lighten($menu-background-color, 10%);
+		@media screen and (min-width: $breakpoint-medium) {
+		  display: none;
+		}
+		@media screen and (max-height: $menu-header-height + 15* $menu-button-height) {
+		  display: none;
+		}
+	  }
+	  header {
+		display: none;
+	  }
+	}
+
+	@media screen and (min-width: $breakpoint-medium) {
+	  & > li {
+		ol {
+		  z-index: 90;
+		  margin: 0;
+		  display: block;
+
+		  position: fixed;
+		  top: $menu-button-height-horizontal + $menu-header-height;
+
+		  left: $menu-summary-width;
+		  right: 0;
+		  height: 0;
+		  background-color: darken($menu-background-color, 15%);
+		  border-top: none;
+		  border-bottom: none;
+
+		  overflow: hidden;
+
+		  transition: height 0.5s;
+
+		  li {
+			display: block;
+		  }
+
+		  &.smallDropDown {
+			left: 0;
+		  }
+		}
+
+		header {
+		  z-index: 90;
+		  display: block;
+		  position: fixed;
+		  box-sizing: border-box;
+
+		  padding: 0;
+
+		  white-space: normal;
+
+		  top: $menu-button-height-horizontal + $menu-header-height;
+		  left: 0;
+		  width: $menu-summary-width;
+		  height: 0;
+		  background-color: $menu-drop-down-background-color;
+		  box-shadow: inset -10px 0 20px -10px rgba(0, 0, 0, 0.6);
+
+		  overflow: hidden;
+
+		  transition: height 0.5s;
+
+		  p, h1 {
+			color: desaturate(lighten($menu-drop-down-background-color, 30%), 30%);
+			margin: 0.5em 0.8em 0.5em 0.8em;
+		  }
+		}
+
+		&:hover {
+		  /*ol {
+		  width: $menu-width-extended;
+		  display: block;
+		  position: absolute;
+		  top: 100%;
+		  left: -100%;
+		  background-color: lighten($menu-background-color, 10%);
+		  border-top: none;
+		  border-bottom: none;
+
+		  li {
+			display: block;
+		  }
+		}*/
+		  ol {
+			height: $menu-drop-down-height;
+			&.smallDropDown {
+			  height: $menu-button-height-horizontal;
+			}
+		  }
+
+		  header {
+			height: $menu-drop-down-height;
+		  }
+
+		}
+	  }
+	}
+
+	li {
+	  position: relative;
+	  width: $menu-width-extended;
+	  transition: background-color 0.2s linear;
+
+	  @media screen and (min-width: $breakpoint-medium) {
+		display: inline-block;
+		width: auto;
+		max-width: $menu-width-extended;
+		float: left;
+
+	  }
+
+	  a {
+		display: block;
+		color: inherit;
+
+		height: $menu-button-height;
+		line-height: $menu-button-height;
+		@media screen and (min-width: $breakpoint-medium) {
+		  height: $menu-button-height-horizontal;
+		  line-height: $menu-button-height-horizontal;
+
+		}
+
+		padding: 0 0.5em 0 $menu-width-retracted;
+		& > span {
+		  display: inline-block;
+		  width: ($menu-width-extended - ( $menu-width-retracted + 0.5em ));
+		  overflow: hidden;
+		  text-overflow: ellipsis;
+		}
+		.menuIcon {
+		  position: absolute;
+		  display: inline-block;
+
+		  left: 1em;
+		  top: 0.75em;
+
+		  width: 1em;
+		  height: 1em;
+
+		  text-align: center;
+		}
+
+		&:hover {
+		  background-color: $menu-background-color-selected;
+
+		  /*.loading{
+			width: 100%;
+			transition: width 1s;
+			span{
+			  animation: glow 1s linear 1s infinite;
+
+			  background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,0.6) 50%,rgba(255,255,255,0) 100%) repeat;
+			  background-size: 50% 100%;
+			}
+		  }*/
+		}
+
+		&::before {
+		  top: ($menu-button-height / 4);
+		  right: 0;
+		  content: "";
+
+		  display: block;
+		  position: absolute;
+
+		  z-index: 80;
+		  width: 0;
+		  height: 0;
+		  border-top: ($menu-button-height / 4) solid transparent;
+		  border-bottom: ($menu-button-height / 4) solid transparent;
+		  border-right: 0 solid $content-background-color;
+
+		  transition: border-right-width 0.2s linear, border-top-width 0.2s linear;
+		  @media screen and (min-width: $breakpoint-medium) {
+			border-right: ($menu-button-height / 4) solid transparent;
+			border-left: ($menu-button-height / 4) solid transparent;
+			border-top: 0 solid $menu-background-color-selected;
+			top: $menu-button-height-horizontal;
+			left: $menu-width-extended / 2 - ($menu-button-height / 4);
+		  }
+
+		}
+
+	  }
+
+	  .selected {
+		color: #fff;
+		background-color: $menu-background-color-selected;
+
+		@media screen and (min-width: $breakpoint-small) {
+		  &::before {
+			border-right-width: ($menu-button-height / 4);
+		  }
+		}
+		@media screen and (min-width: $breakpoint-medium) {
+		  &::before {
+			border-top-width: ($menu-button-height / 4);
+		  }
+		}
+	  }
+
+	}
+  }
+
+	.menu-footer {
+		display: block;
+		bottom: 0;
+		position: fixed;
+		width: $menu-width-retracted;
+
+		@media screen and (max-width: $breakpoint-small) {
+			.button {
+				padding: 0;
+				width: 2.3em;
+				height: 2.3em;
+				display: inline-block;
+
+				margin-left: 0.25em;
+
+				i {
+					margin: 0.65em;
+				}
+				span{
+					display: none;
+				}
+			}
+		}
+		@media screen and (min-width: $breakpoint-small) {
+			width: $menu-width-extended + 0.5em;
+		}
+		@media screen and (min-width: $breakpoint-medium) {
+			display: none;
+		}
+
+		text-align: center;
+	}
+}
+
+
+.erlang-icon {
+	background: url('data:image/png;base64,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');
+}

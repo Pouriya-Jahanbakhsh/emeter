@@ -1,0 +1,46 @@
+{application
+,emeter
+,[{description, "Erlang/Elixir Web based and pluginable metrics, monitoring, and observer."}
+ ,{vsn, "0.1.0"}
+ ,{mod, {emeter, undef}}
+ ,{applications, [kernel, stdlib, cowboy]}
+ ,{env,[
+       % Port number. default: 1995
+       % {api_port, inet:port_number()}
+
+       % Do we want web panel or not?
+       % {web_panel, boolean()}
+
+       % Erlang remotes nodes to connect
+       % {nodes, [] | [node()]}
+
+       % Plugins. will be started in application start phase.
+       % Every plugin should has start/0 and stop/0 exported.
+       % {plugins, [] | [Name :: atom()]}
+
+       % Pages.
+       % {pages, [] | [{Name :: binary(), {Mod :: module()
+       %                                  ,Func :: atom()
+       %                                  ,Opts :: #{refresh_timeout => non_neg_integer()
+       %                                            ,api_only => boolean()
+       %                                            ,is_transformed => boolean()}}}]}
+       ]}
+ ,{modules, [emeter
+            ,emeter_agent_api
+            ,emeter_api
+            ,emeter_node
+            ,emeter_node_manager
+            ,emeter_node_sup
+            ,emeter_page
+            ,emeter_plugin
+            ,emeter_plugin_pt
+            ,emeter_plugin_sup
+            ,emeter_sup
+            ,emeter_web_api
+            ,emeter_web_assets
+            ,emeter_web_static
+            ,emeter_web_websocket]}
+ ,{maintainers, ["pouriya-jahanbakhsh@gmail.com"]}
+ ,{licenses, ["BSD 3-Clause"]}
+ ,{links, [{"GitHub", "https://github.com/pouriya-jahanbakhsh/emeter"}
+          ,{"Hex", "https://hex.pm/packages/emeter"}]}]}.

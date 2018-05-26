@@ -1,0 +1,24 @@
+{
+  "build": ["css", "js", "html"],
+  "deploy": ["css-prod", "js-prod", "html-prod"],
+  "watch": ["css", "js", "html"],
+  "root": {
+    "src": "./web",
+    "dest": "./assets"
+  },
+  "css": {
+    "src": "css",
+    "dest": "",
+    "pattern": "/**/*.scss"
+  },
+  "js": {
+    "src": "js",
+    "dest": "",
+    "pattern": "/**/*.js"
+  },
+  "html": {
+    "src": "html",
+    "dest": "",
+    "pattern": "/**/*"
+  }
+}

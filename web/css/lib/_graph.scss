@@ -1,0 +1,90 @@
+.process-node {
+  font-size: 90%;
+
+  border: 1px solid #000;
+  border-radius: 1em;
+
+  cursor: pointer;
+
+  p {
+    margin: 0.3em 0.7em 0.3em -1em;
+
+    &:nth-child(even) {
+      font-style: italic;
+    }
+  }
+}
+
+.application {
+  background-color: #f7f929;
+}
+.supervisor {
+  background-color: #caff70;
+}
+.director {
+  background-color: #caff70;
+}
+.supervisor_bridge {
+  background-color: #caff70;
+}
+.gen_server {
+  background-color: 	#f88379;
+}
+.gen_fsm {
+  background-color: #ff7fff;
+}
+.gen_statem {
+  background-color: #ff7fff;
+}
+.p1_fsm {
+  background-color: #ff7fff;
+}
+.gen_event {
+  background-color: #94f6ed;
+}
+.unknown {
+  background-color: #fff;
+}
+.process-node:hover {
+  border: 1px solid #000;
+  border-radius: 1em;
+  background-color: #adf;
+}
+
+#applications_app_list {
+  margin-left: 0.3em;
+}
+#applications_header {
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  z-index: 1;
+
+  @media screen and (min-width: $breakpoint-medium) {
+    top: 6em;
+  }
+}
+#application_chart {
+  box-sizing: border-box;
+  position: absolute;
+  left:0; right:0;
+  // height: 100%;
+  top: 1em;
+  bottom: 1em;
+
+  @media screen and (min-width: $breakpoint-medium) {
+    top: 6em;
+    bottom: 3em;
+  }
+}
+/* required LIB STYLES */
+/* .Treant se automatski dodaje na svaki chart conatiner */
+.Treant { position: relative; overflow: hidden; padding: 0 !important; }
+.Treant > .node,
+.Treant > .pseudo { position: absolute; display: block; visibility: hidden; }
+.Treant.Treant-loaded .node,
+.Treant.Treant-loaded .pseudo { visibility: visible; }
+.Treant > .pseudo { width: 0; height: 0; border: none; padding: 0; }
+.Treant .collapse-switch { width: 3px; height: 3px; display: block; border: 1px solid black; position: absolute; top: 1px; right: 1px; cursor: pointer; }
+.Treant .collapsed .collapse-switch { background-color: #868DEE; }
+.Treant > .node img {	border: none; float: left; }
