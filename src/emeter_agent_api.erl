@@ -213,7 +213,7 @@ process_full_info(Proc) when ?is_process(Proc) ->
             Memory = Find(garbage_collection, [{min_heap_size, 0}, {full_sweep_after, 0}]),
             Behavior = process_behavior(InitialCall),
             {ok, #{<<"trap_exit">> => Find(trap_exit, <<"false">>)
-                  ,<<"state">> => binary(process_state(Proc, InitialCall, Behavior))
+                  ,<<"state">> => process_state(Proc, InitialCall, Behavior)
                   ,<<"relations">> => #{<<"links">> => [binary(X) || X <- Find(links, [])]
                                        ,<<"group_leader">> => binary(Find(group_leader, <<"unknown">>))
                                        ,<<"ancestors">> => Ancestors}
@@ -1046,18 +1046,16 @@ process_state(Pid, {Mod, _, _}, Behavior) ->
     if
         CanGetState ->
             try
-                sys:get_state(Pid, ?DEF_GET_STATE_TIMEOUT)
+                binary(sys:get_state(Pid, ?DEF_GET_STATE_TIMEOUT))
             catch
-                _:Rsn ->
-                    binary(io_lib:format("**ERROR** Got error ~tp in getting state", [Rsn]))
+                _:_ ->
+                    <<>>
             end;
         true ->
-            <<"This process did not handle system messages. \n"
-              "So we can't get its state in normal fashion.">>
+            <<>>
     end;
 process_state(_, _, _) ->
-    <<"This process did not handle system messages. \n"
-      "So we can't get its state in normal fashion.">>.
+    <<>>.
 
 
 are_system_functions_exported(Exports) ->
