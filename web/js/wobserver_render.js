@@ -355,7 +355,7 @@ const WobserverRender = {
         <tr><th>Run Queue</th><td>${system.statistics.process_running}</td></tr>
         <tr><th>IO Input</th><td>${byte_formatter(system.statistics.input)}</td></tr>
         <tr><th>IO Output</th><td>${byte_formatter(system.statistics.output)}</td></tr>
-        <tr><th>Atom count</th><td>${system.memory.atom_count}</td></tr>
+        <tr><th>Atom count</th><td>${system.statistics.atom_count}</td></tr>
       </table>`;
 
     content.innerHTML = architecture + cpu + memory + statistics;

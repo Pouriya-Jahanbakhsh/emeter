@@ -632,6 +632,25 @@ cpu_info() ->
 
 
 memory_info() ->
+    M = erlang:memory(),
+    Find =
+        fun(Key, Def) ->
+            case lists:keyfind(Key, 1, M) of
+                {_, Val} ->
+                    Val;
+                _ ->
+                    Def
+            end
+        end,
+    #{<<"atom">> => Find(atom, 0)
+     ,<<"binary">> => Find(binary, 0)
+     ,<<"code">> => Find(code, 0)
+     ,<<"ets">> => Find(ets, 0)
+     ,<<"process">> => Find(processes, 0)
+     ,<<"total">> => Find(total, 0)}.
+
+
+statistics() ->
     AtomCount =
         try
             erlang:system_info(atom_count)
@@ -651,33 +670,14 @@ memory_info() ->
                         <<"unknown">>
                 end
         end,
-    M = erlang:memory(),
-    Find =
-        fun(Key, Def) ->
-            case lists:keyfind(Key, 1, M) of
-                {_, Val} ->
-                    Val;
-                _ ->
-                    Def
-            end
-        end,
-    #{<<"atom">> => Find(atom, 0)
-     ,<<"binary">> => Find(binary, 0)
-     ,<<"code">> => Find(code, 0)
-     ,<<"ets">> => Find(ets, 0)
-     ,<<"process">> => Find(processes, 0)
-     ,<<"total">> => Find(total, 0)
-     ,<<"atom_count">> => AtomCount}.
-
-
-statistics() ->
     {{_, I}, {_, O}} = erlang:statistics(io),
     #{<<"uptime">> => erlang:element(1, erlang:statistics(wall_clock))
      ,<<"process_running">> => erlang:statistics(run_queue)
      ,<<"process_total">> => erlang:system_info(process_count)
      ,<<"process_max">> => erlang:system_info(process_limit)
      ,<<"input">> => I
-     ,<<"output">> => O}.
+     ,<<"output">> => O
+     ,<<"atom_count">> => AtomCount}.
 
 
 scheduler_info() ->
