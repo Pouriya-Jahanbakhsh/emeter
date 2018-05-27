@@ -83,6 +83,7 @@ connect(Pid) ->
 %% 'gen_server' callbacks:
 
 init(Node) ->
+    erlang:process_flag(trap_exit, true),
     notify(0),
     {ok, #?S{node = Node, connection = false}}.
 

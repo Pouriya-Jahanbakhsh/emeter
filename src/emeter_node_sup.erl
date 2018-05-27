@@ -44,7 +44,9 @@
 
 %% API:
 -export([start_link/0
-        ,connect/1]).
+        ,connect/1
+        ,add/1
+        ,delete/1]).
 
 %% 'director' callbacks:
 -export([init/1
@@ -64,6 +66,20 @@
 
 start_link() ->
     director:start_link({local, ?PROC}, ?MODULE, undefined).
+
+
+add(Node) when erlang:is_atom(Node) ->
+    case director:start_child(?PROC
+                             ,#{id => Node, start => {emeter_node_manager, start_link, [Node]}}) of
+        {ok, _} ->
+            ok;
+        Err ->
+            Err
+    end.
+
+
+delete(Node) when erlang:is_atom(Node) ->
+    director:terminate_and_delete_child(?PROC, Node).
 
 
 connect(Node) ->
