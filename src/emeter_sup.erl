@@ -70,8 +70,14 @@ start_link() ->
 init(_) -> % (undefined)
     {ok, undefined, [#{id => emeter_node_sup, start => emeter_node_sup}
                     ,#{id => emeter_page, start => emeter_page}
-                    ,#{id => emeter_plugin_sup, start => emeter_plugin_sup, type => sup}
-                    ,#{id => emeter_plugin, start => emeter_plugin, type => sup}]}.
+                    ,#{id => emeter_plugin_sup
+                      ,start => emeter_plugin_sup
+                      ,type => w
+                      ,terminate_timeout => infinity}
+                    ,#{id => emeter_plugin
+                      ,start => emeter_plugin
+                      ,type => w
+                      ,terminate_timeout => infinity}]}.
 
 
 handle_start(_, Chs, S, _) ->
