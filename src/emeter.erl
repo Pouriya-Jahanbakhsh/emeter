@@ -48,7 +48,9 @@
         ,value/1
         ,value/2
         ,set/2
-        ,about/0]).
+        ,about/0
+        ,add_node/1
+        ,delete_node/1]).
 
 %% 'application' callbacks:
 -export([start/2
@@ -110,6 +112,13 @@ about() ->
                          "ublished under their MIT license">>
      ,<<"description">> => <<"Erlang Web based metrics, monitoring, and observer.">>}.
 
+
+add_node(Node) ->
+    emeter_node_sup:add(Node).
+
+
+delete_node(Node) ->
+    emeter_node_sup:delete(Node).
 
 %% -------------------------------------------------------------------------------------------------
 %% 'application' callbacks:
