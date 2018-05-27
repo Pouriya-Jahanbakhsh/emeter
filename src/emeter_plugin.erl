@@ -139,7 +139,10 @@ handle_call({?STOP_TAG, Plugin}, _, #?S{started = Started}=S) ->
         end,
     {reply, Reply, S#?S{started = Started2}};
 handle_call(?STARTED_TAG, _, #?S{started = Started}=S) ->
-    {reply, Started, S}.
+    {reply, Started, S};
+handle_call(Req, _, S) ->
+    {reply, {error, {unknown, [{request, Req}]}}, S}.
+
 
 
 handle_cast(_, S) ->
