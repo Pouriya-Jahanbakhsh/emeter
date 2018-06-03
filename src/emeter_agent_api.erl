@@ -593,46 +593,6 @@ code_change(_, S, _) ->
 %% -------------------------------------------------------------------------------------------------
 %% Internal:
 
-call(Func, Args, Timeout) ->
-    Pid = erlang:self(),
-    Ref = erlang:make_ref(),
-    RunFun =
-        fun() ->
-            Result =
-                try
-                    erlang:apply(?MODULE, Func, Args)
-                catch
-                    _:Rsn ->
-                        {error, {crash, [{reason, Rsn}
-                                        ,?stacktrace
-                                        ,{function, Func}
-                                        ,{arguments, Args}]}}
-                end,
-            Pid ! {Ref, Result}
-        end,
-    Result =
-        try erlang:spawn(RunFun) of
-            RunPid ->
-                receive
-                    {Ref, RunResult} ->
-                        RunResult
-                after Timeout ->
-                    erlang:exit(RunPid, kill),
-                    {error, {timeout, [{timeout, Timeout}
-                                      ,{function, Func}
-                                      ,{arguments, Args}]}}
-                end
-        catch
-            _:Rsn -> % system_limit
-                {error, {spawn, [{reason, Rsn}, {function, Func}, {arguments, Args}]}}
-        end,
-    case Result of
-        {Tag, _} when Tag == ok orelse Tag == error ->
-            Result;
-        _ ->
-            {error, {return, [{value, Result}, {function, Func}, {arguments, Args}]}}
-    end.
-
 execute(Exprs) ->
     try erl_eval:exprs(Exprs, erl_eval:new_bindings()) of
         {value, Val, _} ->
