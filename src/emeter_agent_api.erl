@@ -44,6 +44,7 @@
 
 %% API:
 -export([call/4
+        ,call/3
         ,system_info/0
         ,allocators_info/0
         ,process_short_info/1
@@ -128,6 +129,46 @@ call(Node, Func, Args, Timeout) ->
                        ,{timeout, Timeout}
                        ,?stacktrace]}}.
 
+
+call(Func, Args, Timeout) ->
+    Pid = erlang:self(),
+    Ref = erlang:make_ref(),
+    RunFun =
+        fun() ->
+            Result =
+                try
+                    erlang:apply(?MODULE, Func, Args)
+                catch
+                    _:Rsn ->
+                        {error, {crash, [{reason, Rsn}
+                                        ,?stacktrace
+                                        ,{function, Func}
+                                        ,{arguments, Args}]}}
+                end,
+            Pid ! {Ref, Result}
+        end,
+    Result =
+        try erlang:spawn(RunFun) of
+            RunPid ->
+                receive
+                    {Ref, RunResult} ->
+                        RunResult
+                after Timeout ->
+                    erlang:exit(RunPid, kill),
+                    {error, {timeout, [{timeout, Timeout}
+                                      ,{function, Func}
+                                      ,{arguments, Args}]}}
+                end
+        catch
+            _:Rsn -> % system_limit
+                {error, {spawn, [{reason, Rsn}, {function, Func}, {arguments, Args}]}}
+        end,
+    case Result of
+        {Tag, _} when Tag == ok orelse Tag == error ->
+            Result;
+        _ ->
+            {error, {return, [{value, Result}, {function, Func}, {arguments, Args}]}}
+    end.
 
 system_info() ->
     {ok, #{<<"architecture">> => architecture_info()
