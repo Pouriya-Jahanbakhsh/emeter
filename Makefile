@@ -41,7 +41,7 @@ start: check-release
 
 
 stop: check-release
-	@ $(REL_PATH)/bin/emeter stop
+	$(REL_PATH)/bin/emeter stop
 
 
 tar: check-release 
