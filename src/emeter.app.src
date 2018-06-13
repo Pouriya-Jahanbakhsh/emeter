@@ -1,7 +1,7 @@
 {application
 ,emeter
 ,[{description, "Erlang/Elixir Web based and pluginable metrics, monitoring, and observer."}
- ,{vsn, "0.1.0"}
+ ,{vsn, "18.6.13"}
  ,{mod, {emeter, undef}}
  ,{applications, [kernel, stdlib, cowboy]}
  ,{env,[
