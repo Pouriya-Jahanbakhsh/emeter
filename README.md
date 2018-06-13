@@ -592,7 +592,7 @@ Note that when Emeter connects to a remote Erlang node, It loads module `emeter_
 
 
 ## Plugins and Pages
-Every page should hase a unique name. You should specify a module, say `A` and a function, say `F` for running page too. When you make a request to `/api/NODE_NAME/YOUR_PAGE_NAME`, Emeter runs `M:F(NODE_NAME)` to getting its response. This function has to yield `{'ok', Result}` or `{'error', Reason}`. Note that Emeter tries to encode `Result` to JSON. Final response will be:  
+Each page should hase a unique name. You should specify a module, say `A` and a function, say `F` for running page too. When you make a request to `/api/NODE_NAME/YOUR_PAGE_NAME`, Emeter runs `M:F(NODE_NAME)` to getting its response. This function has to yield `{'ok', Result}` or `{'error', Reason}`. Note that Emeter tries to encode `Result` to JSON. Final response will be:  
 ```javascript
 {"ok":true, "data": ResultEncodedToJSON}
 ```
@@ -638,7 +638,7 @@ my_page_function(Node) ->
 	Pids = rpc:call(Node, erlang, processes, []),
 	GetMemFoldFun =
 		fun(Pid, Acc) ->
-			%% I have to get process_info for every pid:
+			%% I have to get process_info for each pid:
 			case rpc:call(Node, erlang, process_info, [Pid, memory]) of
 				{memory, M} when M > 102400 ->
 					[Pid|Acc];
@@ -649,8 +649,8 @@ my_page_function(Node) ->
 	HighMemPids = lists:foldl(GetMemFoldFun, [], Pids),
 	{ok, [erlang:pid_to_list(X) || X <- HighMemPids]}. %% For encoding to JSON
 ```
-In above i have to load all processes of remote node in current node (if it was remote node). Also i have to call `rpc:call` for every pid too. It's too slow in large systems. There is another way.  
-I rewrite above code to:  
+In above i have to load all processes of remote node in current node (if it was remote node). Also i have to call `rpc:call` for each pid too. It's too slow in large systems. There is another way.  
+I rewrite above code:  
 ```erlang
 -module(my_page_module).
 
@@ -662,7 +662,7 @@ my_page_function_pt() ->
 	Pids = processes(),
 	GetMemFoldFun =
 		fun(Pid, Acc) ->
-			%% I have to get process_info for every pid:
+			%% I have to get process_info for each pid:
 			case erlang:process_info(Pid, memory) of
 				{memory, M} when M > 102400 ->
 					[Pid|Acc];
@@ -719,7 +719,7 @@ high_memory_processes_pt() ->
 	Pids = processes(),
 	GetMemFoldFun =
 		fun(Pid, Acc) ->
-			%% I have to get process_info for every pid:
+			%% I have to get process_info for each pid:
 			case erlang:process_info(Pid, memory) of
 				{memory, M} when M > 102400 ->
 					[Pid|Acc];
@@ -735,10 +735,11 @@ If your plugin has supervision tree and you want to start it under Emeter's supe
 ```erlang
 emeter_plugin_sup:start(ChildId :: term()
                        ,StartMod :: module()
-                       ,Startfunc :: atom()
+                       ,StartFunc :: atom()
                        ,StartArgs :: [] | list())
 ```
 This supervisor will delete your child from its children after 10 crashes.  
 
 
-
+## About Emeter project
+Actually i used Emeter to monitor 100 Erlang Ejabberd nodes successfully in production. But Emeter has not test suites yet, Then be careful about using emeter in production. I love pull requests from everyone, but it's good to tell me your idea, bug, ... in issues before.  
