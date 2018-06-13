@@ -50,11 +50,12 @@ By default Emeter uses `error_logger` for generating logs, if you want to use `l
 /projects/emeter $ make compile
 ```
 Also it uses `jsone` for JSON decoding/encoding. If you want to use `jiffy`, export environment variable `ERL_EMETER_USE_JIFFY` and recompile code.  
+If you want to use cutom `inetrc` file for Erlang distribution, Use `make release inetrc=/path/to/your/inetrc`.  
 For more information see other targets of `Makefile`.  
 
 
 ## ReST API
-In below examples `NODE_NAME` should be an Erlang node name or `local`. Each JSON object has key `ok` with boolean value. If `ok`'s value is `False`, there is also a key named `error` with details about failure. otherwise all collected data is in key `data`. Also i used comments after `//` to explain type of some values. 
+In below examples `NODE_NAME` should be an Erlang node (e.g. `mynode@myhost`) or `local`. Each JSON object has key `ok` with boolean value. If value is `false`, there is also a key named `error` with details about failure. Otherwise all collected data is in key `data`. Also i used comments after `//` to explain type of some values. 
 
 #### System
 Request path:  
@@ -672,4 +673,72 @@ my_page_function_pt() ->
 	HighMemPids = lists:foldl(GetMemFoldFun, [], Pids),
 	{ok, [erlang:pid_to_list(X) || X <- HighMemPids]}. %% For encoding to JSON
 ```
-After compilation, Emeter transforms every function with arity 0 which its name end with `_pt`. Now `my_page_module:my_page_function_pt/0` yeilds its AST (Abstract Syntax Tree) emeter runs its code on requested node using `emeter_agent_api` process. It's more fast and effecient.  
+After compilation, Emeter transforms every function with arity 0 which its name ends with `_pt`. Now `my_page_module:my_page_function_pt/0` yeilds its AST (Abstract Syntax Tree) and emeter runs its code on requested node using `emeter_agent_api` process. It's too fast and effecient.  
+
+# Plugins
+Emeter can start/stop your custom plugin.  You should specify plugins in application environment variables. `sys.config` example:  
+```erlang
+[
+{emeter, [{plugins, [PluginModule :: atom()]}]}
+]
+```
+Emeter calls `PluginModule:start()` which should yield `ok` or `{error, Reason}`.  
+
+### Plugin example
+```erlang
+-module(my_plugin).
+
+-include("/path/to/emeter/include/emeter_plugin.hrl").
+-export([start/0, stop/0, node_count/1, my_page_function_pt/0]).
+
+start() ->
+	emeter_page:add(<<"node_count">>
+	               ,?MODULE
+	               ,node_count
+	               ,5
+	               ,true),
+	emeter_page:add(<<"high_memory_processes">>
+	               ,?MODULE
+	               ,high_memory_processes_pt
+	               ,5
+	               ,true),
+	ok.
+
+stop() ->
+	emeter_page:delete(<<"node_count">>),
+	emeter_page:delete(<<"high_memory_processes">>),
+	ok.
+
+ 
+node_count(Node) ->
+	{ok, length(rpc:call(Node, erlang, nodes, []))}.
+
+
+high_memory_processes_pt() ->
+	%% Get processes of node:
+	Pids = processes(),
+	GetMemFoldFun =
+		fun(Pid, Acc) ->
+			%% I have to get process_info for every pid:
+			case erlang:process_info(Pid, memory) of
+				{memory, M} when M > 102400 ->
+					[Pid|Acc];
+				_ ->
+					Acc
+			end
+		end,
+	HighMemPids = lists:foldl(GetMemFoldFun, [], Pids),
+	{ok, [erlang:pid_to_list(X) || X <- HighMemPids]}. %% For encoding to JSON
+```
+
+If your plugin has supervision tree and you want to start it under Emeter's supervision tree, use:  
+```erlang
+emeter_plugin_sup:start(ChildId :: term()
+                       ,StartMod :: module()
+                       ,Startfunc :: atom()
+                       ,StartArgs :: [] | list())
+```
+This supervisor will delete your child from its children after 10 crashes.  
+
+
+
