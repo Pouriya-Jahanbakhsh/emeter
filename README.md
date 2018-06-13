@@ -3,7 +3,7 @@ Erlang/Elixir Web based and pluginable metrics, monitoring, and observer.
 
 
 ## Features
-* Monitor Erlang virtual machine (<a href="https://user-images.githubusercontent.com/20663776/40584187-b4356222-618c-11e8-9cf2-92329747bec8.png" target="_blank">picture</a>):  
+* Monitor Erlang virtual machine (<a href="https://user-images.githubusercontent.com/20663776/40584187-b4356222-618c-11e8-9cf2-92329747bec8.png" target="_blank">screenshot</a>):  
     * Memory:  
         * Total used memory  
         * Total used memory for processes  
@@ -26,13 +26,13 @@ Erlang/Elixir Web based and pluginable metrics, monitoring, and observer.
         * ERTS version  
         * Async thread count  
         * ...  
-* Graphs for CPU(s) load average, Memory, I/O, ... (<a href="https://user-images.githubusercontent.com/20663776/40584189-b8e0e2ce-618c-11e8-92de-aaf8fc618696.png" target="_blank">picture</a>)
-* See application's supervison tree with different colors for different process behaviors (<a href="https://user-images.githubusercontent.com/20663776/40584192-be753b86-618c-11e8-8f70-dc98b1ae950c.png" target="_blank">picture</a>). 
-* See important information for different processes (<a href="https://user-images.githubusercontent.com/20663776/40584195-c285ffee-618c-11e8-85cc-8318b6f57714.png" target="_blank">picture</a>).
-* See information about each ETS table and its data (<a href="https://user-images.githubusercontent.com/20663776/40584196-c4f03cae-618c-11e8-8a87-a4d65063f265.png" target="_blank">picture</a>).
+* Graphs for CPU(s) load average, Memory, I/O, ... (<a href="https://user-images.githubusercontent.com/20663776/40584189-b8e0e2ce-618c-11e8-92de-aaf8fc618696.png" target="_blank">screenshot</a>)
+* See application's supervison tree with different colors for different process behaviors (<a href="https://user-images.githubusercontent.com/20663776/40584192-be753b86-618c-11e8-8f70-dc98b1ae950c.png" target="_blank">screenshot</a>). 
+* See important information for different processes (<a href="https://user-images.githubusercontent.com/20663776/40584195-c285ffee-618c-11e8-85cc-8318b6f57714.png" target="_blank">screenshot</a>).
+* See information about each ETS table and its data (<a href="https://user-images.githubusercontent.com/20663776/40584196-c4f03cae-618c-11e8-8a87-a4d65063f265.png" target="_blank">screenshot</a>).
 * Run Emeter as stand-alone Erlang release and connect it to different Erlang nodes and monitor them without having Emeter installed on them.  you can also use it as a dependency inside other releases.  
 * Write your own plugins or add your own pages to web panel for collecting your own data.  
-* Have ReST API for all above features.
+* Have ReST API for all above features.  
 
 All features not listed here. 
 
@@ -50,7 +50,7 @@ By default Emeter uses `error_logger` for generating logs, if you want to use `l
 /projects/emeter $ make compile
 ```
 Also it uses `jsone` for JSON decoding/encoding. If you want to use `jiffy`, export environment variable `ERL_EMETER_USE_JIFFY` and recompile code.  
-If you want to use cutom `inetrc` file for Erlang distribution, Use `make release inetrc=/path/to/your/inetrc`.  
+If you want to use custom `inetrc` file for Erlang distribution, Use `make release inetrc=/path/to/your/inetrc`.  
 For more information see other targets of `Makefile`.  
 
 
@@ -473,32 +473,6 @@ Response example for `lager_config`:
 }
 ```
 
-#### List of monitored nodes
-Note that if some nodes are disconnected, Emeter does not yield them in response.  
-Request path:  
-```csh
-/api/local/nodes
-```
-Response example for `lager_config`:  
-```javascript
-{
-    "data": [
-        {
-            "name": "nodename1@host1"
-        },
-        {
-            "name": "nodename2@host2"
-        },
-        {
-            "name": "nodename2@host2"
-        },
-        // ...
-    ],
-    "ok": true,
-    "timestamp": 1527420610
-}
-```
-
 #### Virtual machine allocators
 Request path:  
 ```sh
@@ -560,6 +534,32 @@ Response example:
 }
 ```
 
+#### List of monitored nodes
+Note that if some nodes are disconnected, Emeter does not yield them in response.  
+Request path:  
+```csh
+/api/local/nodes
+```
+Response example for `lager_config`:  
+```javascript
+{
+    "data": [
+        {
+            "name": "nodename1@host1"
+        },
+        {
+            "name": "nodename2@host2"
+        },
+        {
+            "name": "nodename2@host2"
+        },
+        // ...
+    ],
+    "ok": true,
+    "timestamp": 1527420610
+}
+```
+
 
 ## Connect to other nodes
 We can use `emeter:add_node/1` in run-time:  
@@ -582,7 +582,7 @@ ok
 [emeter@localhost,foo@localhost]
 ```
 
-Add node(s) in application environment variables as value of `nodes` which should be list of nodes for `emeter` application. `sys.config` example:  
+Also we can add node(s) in application environment variables as value of `nodes` which should be list of nodes. `sys.config` example:  
 ```erlang
 [
 {emeter, [{nodes, [node2@host2, node2@host2, node3@host3]}]}
