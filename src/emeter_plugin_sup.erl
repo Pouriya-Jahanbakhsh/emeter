@@ -98,7 +98,7 @@ handle_exit(_, Chs, _, S, #{restart_count := RestartCount}) ->
             true ->
                 wait
         end,
-    {Action, Chs, S, [{loag, true}]}.
+    {Action, Chs, S, [{log, true}]}.
 
 
 handle_terminate(_, Chs, _, S, _) ->
