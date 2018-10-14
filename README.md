@@ -1,3 +1,11 @@
+DO NOT use `master` branch. Reposityory is under development.  
+Todo:  
+* Add hooking using [posthaste](https://github.com/pouriya-jahanbakhsh/posthaste).  
+* Complete plugin implementation.  
+* Change whole provided data to use hooks and use them as plugin.  
+* Use separate config file using [cfg](https://github.com/pouriya-jahanbakhsh/cfg).  
+* Compile plugin callbacks on remote nodes (Update [rmpc](https://github.com/pouriya-jahanbakhsh/rmpc)).  
+
 # Emeter
 Erlang/Elixir Web based and pluginable metrics, monitoring, and observer.  
 
